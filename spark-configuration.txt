@@ -3,3 +3,8 @@ spark.sql("select id, cast(id as string) text from range(1000)").sort("Text").wr
 
 
 .config('spark.hadoop.parquet.enable.summary-metadata', 'true')
+
+import scala.collection.JavaConverters.{collectionAsScalaIterableConverter, mapAsScalaMapConverter}
+
+https://stackoverflow.com/questions/tagged/scala
+
