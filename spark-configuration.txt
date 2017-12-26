@@ -1,0 +1,5 @@
+spark.sql("select id, cast(id as string) text from range(1000)").sort("id").write.parquet("/secret/spark21-sortById")
+spark.sql("select id, cast(id as string) text from range(1000)").sort("Text").write.parquet("/secret/spark21-sortByText")
+
+
+.config('spark.hadoop.parquet.enable.summary-metadata', 'true')
