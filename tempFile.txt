@@ -1,0 +1,3 @@
+https://github.com/vinod2106/spark-scala-mvn
+https://github.com/VladoDemcak/scala-apache-spark-quick-start-project
+https://github.com/mrchristine/spark-template-mvn
