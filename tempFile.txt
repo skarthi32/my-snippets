@@ -1,3 +1,18 @@
 https://github.com/vinod2106/spark-scala-mvn
 https://github.com/VladoDemcak/scala-apache-spark-quick-start-project
 https://github.com/mrchristine/spark-template-mvn
+
+
+https://community.hortonworks.com/questions/85757/how-to-add-the-hadoop-and-yarn-configuration-file.html
+
+
+val conf = new Configuration
+    conf.addResource(new Path("/etc/hadoop/conf/core-site.xml"))
+    conf.addResource(new Path("/etc/hadoop/conf/mapred-site.xml"))
+    conf.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"))
+    
+    
+    jsc.hadoopConfiguration().addResource(new Path(hadoopClusterSiteFilesBasePath + "core-site.xml")); jsc.hadoopConfiguration().addResource(new Path(hadoopClusterSiteFilesBasePath + "hdfs-site.xml")); jsc.hadoopConfiguration().addResource(new Path(hadoopClusterSiteFilesBasePath + "mapred-site.xml")); jsc.hadoopConfiguration().addResource(new Path(hadoopClusterSiteFilesBasePath + "yarn-site.xml"));
+    
+    
+    https://github.com/zhangrenhua/dataload
