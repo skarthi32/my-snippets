@@ -16,3 +16,4 @@ val conf = new Configuration
     
     
     https://github.com/zhangrenhua/dataload
+sqlContext.sql("set spark.sql.caseSensitive=false")
