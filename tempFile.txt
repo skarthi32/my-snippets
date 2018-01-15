@@ -20,3 +20,6 @@ sqlContext.sql("set spark.sql.caseSensitive=false")
 
 http://ebook-dl.com/book/3801
 val logger = new Logger(sparkNetHome + "/training_log_" + System.currentTimeMillis().toString + ".txt")
+
+
+https://github.com/anish749/spark2-etl-examples/blob/master/src/main/scala/org/anish/spark/etl/ProcessData.scala
