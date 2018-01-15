@@ -19,3 +19,4 @@ val conf = new Configuration
 sqlContext.sql("set spark.sql.caseSensitive=false")
 
 http://ebook-dl.com/book/3801
+val logger = new Logger(sparkNetHome + "/training_log_" + System.currentTimeMillis().toString + ".txt")
