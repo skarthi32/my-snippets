@@ -5,3 +5,11 @@ val func = udf( (s:String) => if(s.isEmpty) 0 else 1 )
 // create new dataframe with added column named "notempty"
 val r = d.select( $"a", $"b", func($"a").as("notempty") )
 --------------------------------------------------------------------------
+val rangeData = spark.range(1000L * 1000 * 1000).toDF()
+rangeData.cache()
+// force materialize the cache
+rangeData.count()
+rangeData.selectExpr("sum(id)").show()
+benchmark("Spark 2.0 cache (sum of a billion)") {
+  rangeData.selectExpr("sum(id)").show()
+}
