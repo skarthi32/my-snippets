@@ -1,4 +1,5 @@
 https://github.com/nony-83/avro-parquet-sample
+https://github.com/xavierguihot/spark_helper/blob/master/src/main/scala/com/spark_helper/HdfsHelper.scala
 
 https://github.com/vinod2106/spark-scala-mvn
 https://github.com/VladoDemcak/scala-apache-spark-quick-start-project
