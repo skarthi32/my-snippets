@@ -1,4 +1,4 @@
-// now the good stuff.
+----------------// now the good stuff.
 import org.apache.spark.sql.functions.udf
 // function that returns 0 is string empty 
 val func = udf( (s:String) => if(s.isEmpty) 0 else 1 )
@@ -13,3 +13,14 @@ rangeData.selectExpr("sum(id)").show()
 benchmark("Spark 2.0 cache (sum of a billion)") {
   rangeData.selectExpr("sum(id)").show()
 }
+-------------------
+sparkConf.set("spark.cores.max", "24")
+sparkConf.set("spark.serializer", classOf[KryoSerializer].getName)
+sparkConf.set("spark.sql.tungsten.enabled", "true")
+sparkConf.set("spark.eventLog.enabled", "true")
+sparkConf.set("spark.app.id", "YourApp")
+sparkConf.set("spark.io.compression.codec", "snappy")
+sparkConf.set("spark.rdd.compress", "true")
+sparkConf.set("spark.streaming.backpressure.enabled", "true")
+ 
+sparkConf.set("spark.sql.parquet.compression.codec", "snappy")
