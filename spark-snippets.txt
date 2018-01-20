@@ -1,0 +1,7 @@
+// now the good stuff.
+import org.apache.spark.sql.functions.udf
+// function that returns 0 is string empty 
+val func = udf( (s:String) => if(s.isEmpty) 0 else 1 )
+// create new dataframe with added column named "notempty"
+val r = d.select( $"a", $"b", func($"a").as("notempty") )
+--------------------------------------------------------------------------
