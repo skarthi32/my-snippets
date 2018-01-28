@@ -8,3 +8,46 @@ import scala.collection.JavaConverters.{collectionAsScalaIterableConverter, mapA
 
 https://stackoverflow.com/questions/tagged/scala
 
+    import org.apache.hadoop.fs._
+    import org.apache.spark.deploy.SparkHadoopUtil
+    import java.net.URI
+     
+    val hdfs_conf = SparkHadoopUtil.get.newConfiguration(sc.getConf)
+    val hdfs = FileSystem.get(hdfs_conf)
+    
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+/usr/hdp/current/spark-client/bin/spark-submit   --class org.apache.spark.examples.SparkPi   --master yarn   --deploy-mode cluster   --executor-memory 1G   --num-executors 3   /usr/hdp/current/spark-client/lib/spark-examples*.jar   100
+
+
+c.set("spark.driver.memory", "3g")
+   .set("spark.master", "local[*]")
+   .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+   .set("spark.kryoserializer.buffer", "16mb")
+   .set("spark.driver.extraJavaOptions", "-XX:+UseG1GC -XX:+PrintAdaptiveSizePolicy -XX:+UnlockDiagnosticVMOptions -XX:+G1SummarizeConcMark XX:InitiatingHeapOccupancyPercent=35")
+   .set("spark.sql.parquet.compression.codec", "snappy")
+   .set("spark.default.parallelism", "8")
+.set("spark.sql.shuffle.partitions", "24")
+
+-------------------
+val hdfs: org.apache.hadoop.fs.FileSystem =
+  org.apache.hadoop.fs.FileSystem.get(
+    new org.apache.hadoop.conf.Configuration())
+
+val hadoopPath= new org.apache.hadoop.fs.Path("hdfs://localhost:9000/tmp")
+val recursive = false
+val ri = hdfs.listFiles(hadoopPath, recursive)
+val it = new Iterator[org.apache.hadoop.fs.LocatedFileStatus]() {
+  override def hasNext = ri.hasNext
+  override def next() = ri.next()
+}
+
+// Materialize iterator
+val files = it.toList
+println(files.size)
+println(files.map(_.getLen).sum)
+
+
+//tune size
+val blockSize = 1024 * 1024 * 16      // 16MB
+sc.hadoopConfiguration.setInt( "dfs.blocksize", blockSize )
+sc.hadoopConfiguration.setInt( "parquet.block.size", blockSize )
