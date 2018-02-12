@@ -26,3 +26,19 @@ val logger = new Logger(sparkNetHome + "/training_log_" + System.currentTimeMill
 
 
 https://github.com/anish749/spark2-etl-examples/blob/master/src/main/scala/org/anish/spark/etl/ProcessData.scala
+
+
+https://github.com/knoldus/Lambda-Arch-Spark/blob/master/src/main/scala/com/knoldus/serving/AkkaHttpServer.scala
+https://github.com/bobxwang/spark-tour/blob/master/src/main/scala/com/bob/sparktour/hadoops/HDFSFileTour.scala
+
+https://github.com/joaofsoares/kafka-examples/blob/master/src/main/scala/KafkaProducer.scala
+
+https://github.com/elodina/scala-kafka/blob/master/src/main/scala/KafkaProducer.scala
+
+https://github.com/ZzXxL1994/Spark-Example/blob/master/src/main/scala/com/zxl/spark2_2/dataset/actions.scala
+
+https://github.com/gcbh/kafka-scala/tree/master/src/main/scala/org/gcbh/scala_kafka
+
+
+------------- set spark jar in code itself ----------------
+https://github.com/biopet/spark-utils/blob/develop/src/main/scala/nl/biopet/utils/spark/package.scala
