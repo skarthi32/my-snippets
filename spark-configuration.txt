@@ -1,3 +1,16 @@
+sqlContext.setConf("parquet.filter.statistics.enabled", "true")
+sqlContext.setConf("parquet.filter.dictionary.enabled", "true")
+sqlContext.setConf("spark.sql.parquet.filterPushdown", "true")
+// use the non-Hive read path
+sqlContext.setConf("spark.sql.hive.convertMetastoreParquet", "true")
+// turn off schema merging, which turns off push-down
+sqlContext.setConf("spark.sql.parquet.mergeSchema", "false")
+sqlContext.setConf("spark.sql.hive.convertMetastoreParquet.mergeSchema","false")
+
+--------------------
+
+
+
 spark.sql("select id, cast(id as string) text from range(1000)").sort("id").write.parquet("/secret/spark21-sortById")
 spark.sql("select id, cast(id as string) text from range(1000)").sort("Text").write.parquet("/secret/spark21-sortByText")
 
