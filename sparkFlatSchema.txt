@@ -59,3 +59,8 @@ object Detector {
 
   }
 }
+
+object Models {
+  case class Finance (ID:Long,Account:AccDetail,Date:String,Amount:Double,Description:String,dept:Seq[String])
+  case class AccDetail(Number:String,FirstName:String,LastName:String)
+}
