@@ -1,0 +1,61 @@
+import Models.Finance
+import org.apache.spark.sql.catalyst.encoders.RowEncoder
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.{Row, SparkSession}
+
+import scala.util.{Failure, Success, Try}
+
+object Detector {
+  def fetchValue[T](f: => T): T = {
+    Try(f) match {
+      case Success(value) => value
+      case Failure(ex) => null.asInstanceOf[T]
+    }
+  }
+  def main(args: Array[String]) {
+    val spark = SparkSession.builder
+                            .master("local")
+                            .appName("Fraud Detector")
+                            .config("spark.driver.memory", "2g")
+				                    //.enableHiveSupport
+                            .getOrCreate()
+
+    val schema = StructType(Seq(
+      StructField("finance__ID", LongType),
+      StructField("finance__Account__FirstName", StringType),
+      StructField("finance__Account__LastName", StringType),
+      StructField("finance__Account__Number", StringType),
+      StructField("finance__Amount", DoubleType),
+      StructField("finance__Date", StringType),
+      StructField("finance__Description", StringType),
+      StructField("finance__Dept", ArrayType(StringType, false), false)
+    ))
+
+    val encoder = RowEncoder(schema)
+
+	  import spark.implicits._
+	  val finance = spark.read.json("F:\\Tutorials\\Spark\\Pluralsight - Handling Fast Data with Apache Spark SQL and Streaming\\apache-spark-sql-fast-data-handling-streaming\\03\\module 2\\section 3\\FraudDetector\\Data\\finances.json").as[Finance]
+
+    val transDF = finance.map{finance => {
+      println(s"finance => ${finance}")
+      Row(
+        fetchValue(finance.ID),
+        fetchValue(finance.Account.FirstName),
+        fetchValue(finance.Account.LastName),
+        fetchValue(finance.Account.Number),
+        fetchValue(finance.Amount),
+        fetchValue(finance.Date),
+        fetchValue(finance.Description),
+        fetchValue(finance.dept)
+      )
+    }}(encoder)
+
+
+
+    //finance.show(100,false)
+
+    transDF.printSchema()
+    transDF.show(100,false)
+
+  }
+}
