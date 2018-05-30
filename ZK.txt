@@ -1,0 +1,23 @@
+C:\Tools\kafka_2.12-0.10.2.1
+bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+
+bin\windows\kafka-server-start.bat config\server.properties
+
+bin\windows\kafka-server-start.bat config\server2.properties
+
+
+
+
+Create topic
+bin\windows\kafka-topics.bat --zookeeper localhost:2181 --create --topic first --partitions 2 --replication-factor 2 
+
+ bin\windows\kafka-topics.bat --zookeeper localhost:2181 --describe --topic first
+
+Console producer
+
+bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic first
+
+
+Console Consumer
+
+bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:2181 --topic first
