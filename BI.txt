@@ -107,7 +107,7 @@ contract Bond{
     
     function allocateBond(address _buyerAddress, uint256 _noOfBondsRequired) public payable isOwner {
         require(_noOfBondsRequired >= 1);
-        require(_noOfBondsRequired > noOfBondsRemaining);
+        require(_noOfBondsRequired < noOfBondsRemaining);
         
         uint256 termInterest = parValue.mul(couponRate).div(100).mul(_noOfBondsRequired);
         uint256 principalAmount = parValue.mul(_noOfBondsRequired);
