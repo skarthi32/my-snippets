@@ -1,0 +1,208 @@
+pragma solidity ^0.5.8;
+
+contract Bond{
+    
+    using SafeMath for uint256;
+    
+    // Bond Owner address
+    address private owner;
+    
+    // Bond Name
+    string public name;
+    
+    // Bond Name
+    string public issuerName;
+
+    // total amount of bonds issued
+    uint256 public totalNoOfBondsInitiated;
+    
+    // total amount of bonds not allocated
+    uint256 public noOfBondsRemaining;
+
+    // The par value of a bond also called the face amount or face value is the value written on the front of the bond.
+    uint256 public parValue;
+
+    // the fixed annual interest paid by the issuer to the bondholder
+    uint256 public couponRate;
+
+    //amount of time between bond issuance and bond maturity. no of times To Redeem
+    uint256 public term;
+    
+    // bond maturity date
+    uint256 public seconds_to_maturity;
+    
+    // maturity date for the issuer
+    uint256 public maturity_date;
+    
+    // status of the bond
+    BondStatus public bondStatus=BondStatus.INIT;
+    
+    // Created time
+    uint256 public createdTime;
+    
+    uint256 termThresholdTime;
+    
+    // Bond Statuses
+    enum BondStatus {
+        INIT,
+        FUNDED,
+        BOUGHT,
+        CLOSED
+    }
+    
+    enum PaymentStatus {
+        PAID,
+        NOT_PAID,
+        INPROGESS
+    }
+    
+    struct Buyer {
+        uint256 noOfbondsNeeded;
+        uint256 principalAmount;
+        uint256 interestAmount;
+        uint256 maturityTime;
+        PaymentStatus principalAmountStatus;
+        uint256 termsCompleted;
+        uint256 nextTermTime;
+        PaymentStatus termAmountStatus;
+    }
+    
+    mapping (address => Buyer) private buyers;
+    
+    modifier isOwner {
+        require(owner == msg.sender, "You are not the contract owner");
+        _;
+    }
+    
+    // bonds mapping to buyer
+    mapping(uint256 => address) bonds;
+    
+    uint256 nonce = 0;
+    
+    constructor(string memory _bondName, string memory _issuerName,uint256 _totalNoOfBondsInitiated,
+                uint256 _par, uint256 _coupon,
+                uint256 _term,uint256 _seconds_to_maturity) public {
+        require(bytes(_bondName).length > 0);
+        require(bytes(_issuerName).length > 0);
+        require(_coupon > 0);
+        require(_par > 0);
+        require(_term > 0);
+        require(_seconds_to_maturity > 0);
+        require(_totalNoOfBondsInitiated > 0);
+
+        owner = msg.sender;
+        name = _bondName;
+        issuerName = _issuerName;
+        parValue = _par;
+        couponRate = _coupon;
+        term = _term;
+        seconds_to_maturity = _seconds_to_maturity;
+        totalNoOfBondsInitiated = _totalNoOfBondsInitiated;
+        noOfBondsRemaining = _totalNoOfBondsInitiated;
+        termThresholdTime = seconds_to_maturity.div(term);
+        
+        createdTime = now;
+
+    }
+    
+    function allocateBond(address _buyerAddress, uint256 _noOfBondsRequired) public payable isOwner {
+        require(_noOfBondsRequired >= 1);
+        require(_noOfBondsRequired > noOfBondsRemaining);
+        
+        uint256 termInterest = parValue.mul(couponRate).div(100).mul(_noOfBondsRequired);
+        uint256 principalAmount = parValue.mul(_noOfBondsRequired);
+        //uint256 totalAmntNeedToInvest = parValue.mul(_noOfBondsRequired).add((parValue.mul(couponRate).div(100)).mul(term.mul(_noOfBondsRequired)));
+        
+  
+         
+        
+        /*mapping(uint256 => PaymentStatus) storage termPaymentStatus;
+        for (uint i=0; i < term; i++) {
+            cummulativeTermTime = cummulativeTermTime.add(termThresholdTime);
+            termPaymentStatus[cummulativeTermTime] = PaymentStatus.NOT_PAID;
+        }*/
+        uint256 _maturity = now.add(seconds_to_maturity);
+        uint256 _noOfTermsCompleted = 0;
+        uint256 _nextThresholdTime = now.add(termThresholdTime);
+        buyers[_buyerAddress] = Buyer(_noOfBondsRequired,
+        principalAmount,termInterest,
+        _maturity,
+        PaymentStatus.NOT_PAID,
+        _noOfTermsCompleted,
+        _nextThresholdTime,
+        PaymentStatus.INPROGESS);
+        
+        
+        
+        
+        
+    }
+    
+    function getBalance() public view returns (uint256) {
+
+     return address(this).balance;
+
+   }
+    
+    
+}
+
+library SafeMath {
+    /**
+     * @dev Multiplies two unsigned integers, reverts on overflow.
+     */
+    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
+        // benefit is lost if 'b' is also tested.
+        // See: https://github.com/OpenZeppelin/openzeppelin-solidity/pull/522
+        if (a == 0) {
+            return 0;
+        }
+
+        uint256 c = a * b;
+        require(c / a == b, "SafeMath: multiplication overflow");
+
+        return c;
+    }
+
+    /**
+     * @dev Integer division of two unsigned integers truncating the quotient, reverts on division by zero.
+     */
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        // Solidity only automatically asserts when dividing by 0
+        require(b > 0, "SafeMath: division by zero");
+        uint256 c = a / b;
+        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+
+        return c;
+    }
+
+    /**
+     * @dev Subtracts two unsigned integers, reverts on overflow (i.e. if subtrahend is greater than minuend).
+     */
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        require(b <= a, "SafeMath: subtraction overflow");
+        uint256 c = a - b;
+
+        return c;
+    }
+
+    /**
+     * @dev Adds two unsigned integers, reverts on overflow.
+     */
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
+        require(c >= a, "SafeMath: addition overflow");
+
+        return c;
+    }
+
+    /**
+     * @dev Divides two unsigned integers and returns the remainder (unsigned integer modulo),
+     * reverts when dividing by zero.
+     */
+    function mod(uint256 a, uint256 b) internal pure returns (uint256) {
+        require(b != 0, "SafeMath: modulo by zero");
+        return a % b;
+    }
+}
