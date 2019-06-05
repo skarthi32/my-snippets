@@ -1,3 +1,6 @@
+http://www.adaltas.com/en/2019/03/25/spark-sql-dataframe-thrift-server/
+
+
 https://github.com/charlescrain/smartbonds
 https://github.com/phenom-company/ico-smartcontract-bond
 https://github.com/apereverzin/smart-bond
